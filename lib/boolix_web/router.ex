@@ -5,8 +5,15 @@ defmodule BoolixWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", BoolixWeb do
+  scope "/", BoolixWeb do
     pipe_through :api
+
+    resources "/books", BookController, except: [:new, :edit]
+    resources "/users", UserController, except: [:new, :edit]
+
+    post "/lend", BookController, :lend
+    post "/return", BookController, :return
+    post "/donate", BookController, :donate
   end
 
   # Enable LiveDashboard in development

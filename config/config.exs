@@ -8,6 +8,7 @@
 import Config
 
 config :boolix,
+  env: config_env(),
   ecto_repos: [Boolix.Repo],
   generators: [timestamp_type: :utc_datetime]
 
