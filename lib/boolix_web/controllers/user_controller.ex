@@ -11,8 +11,17 @@ defmodule BoolixWeb.UserController do
     render(conn, :index, users: users)
   end
 
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Users.create_user(user_params) do
+  def create_customer(conn, user_params) do
+    with {:ok, %User{} = user} <- Users.create_customer(user_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", ~p"/users/#{user}")
+      |> render(:show, user: user)
+    end
+  end
+
+  def create_employee(conn, user_params) do
+    with {:ok, %User{} = user} <- Users.create_employee(user_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/users/#{user}")
@@ -25,7 +34,8 @@ defmodule BoolixWeb.UserController do
     render(conn, :show, user: user)
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(conn, params) do
+    {id, user_params} = Map.pop(params, :id)
     user = Users.get_user!(id)
 
     with {:ok, %User{} = user} <- Users.update_user(user, user_params) do

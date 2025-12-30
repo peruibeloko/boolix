@@ -2,6 +2,7 @@ defmodule Boolix.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "users" do
     field :name, :string
     field :email, :string
@@ -13,7 +14,13 @@ defmodule Boolix.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
+    |> cast(attrs, [:name, :email])
+    |> validate_required([:name, :email])
+  end
+
+  def changeset_employee(user, attrs) do
+    user
     |> cast(attrs, [:name, :email, :is_employee])
-    |> validate_required([:name, :email, :is_employee])
+    |> validate_required([:name, :email])
   end
 end

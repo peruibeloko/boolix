@@ -2,6 +2,7 @@ defmodule Boolix.Catalog.Book do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, Ecto.UUID, autogenerate: true}
   schema "books" do
     field :title, :string
     field :author, :string
@@ -12,10 +13,15 @@ defmodule Boolix.Catalog.Book do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
-  def changeset(book, attrs) do
+  def changeset_info(book, attrs) do
     book
-    |> cast(attrs, [:title, :author, :isbn, :quantity, :available])
-    |> validate_required([:title, :author, :isbn, :quantity, :available])
+    |> cast(attrs, [:title, :author, :isbn])
+  end
+
+  def changeset_inventory(book, attrs) do
+    book
+    |> cast(attrs, [:quantity, :available])
+    |> validate_number(:quantity, greater_than: 0)
+    |> validate_number(:available, greater_than: 0)
   end
 end

@@ -9,11 +9,12 @@ defmodule BoolixWeb.Router do
     pipe_through :api
 
     resources "/books", BookController, except: [:new, :edit]
-    resources "/users", UserController, except: [:new, :edit]
+    post "/books/borrow", BookController, :borrow
+    post "/books/return", BookController, :return
 
-    post "/lend", BookController, :lend
-    post "/return", BookController, :return
-    post "/donate", BookController, :donate
+    resources "/users", UserController, except: [:new, :create, :edit]
+    post "/users/customer", UserController, :create_customer
+    post "/users/employee", UserController, :create_employee
   end
 
   # Enable LiveDashboard in development
